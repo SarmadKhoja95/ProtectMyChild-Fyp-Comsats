@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://oilex_user:pak1122@cluster0-bhjq3.mongodb.net/child-tracker?retryWrites=true&w=majority",
+  "jwtSecret": "slyjwtsecret"
+}
