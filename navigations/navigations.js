@@ -21,8 +21,12 @@ import SignupScreen from "../screens/Signup";
 import DashboardHome from "../screens/DashboardHome";
 import HelpingOthers from "../screens/HelpOthers";
 import Analytics from "../screens/Analytics";
+import SelectReports from "../screens/SelectReports";
 import CitizenReporting from "../screens/CitizenReporting";
 import AddLocation from "../screens/AddLocation";
+import ChildProfile from "../screens//ChildProfile";
+
+
 
 
 //redux state
@@ -58,7 +62,8 @@ export default function Navigation(props) {
   //Citizen Reporting navs Using Stack Navigator
   const CitizenReportingNavigations = (props) => {
     return (
-      <Stack.Navigator headerMode="none" initialRouteName="AddReport">
+      <Stack.Navigator headerMode="none" initialRouteName="SelectReports">
+        <Stack.Screen name="SelectReports" component={SelectReports} />
         <Stack.Screen name="AddReport" component={CitizenReporting} />
         <Stack.Screen name="AddLocation" component={AddLocation} />
       </Stack.Navigator>
@@ -71,6 +76,7 @@ export default function Navigation(props) {
     return (
       <UserDashboardStack.Navigator initialRouteName="DashboardHome" headerMode="none">
         <UserDashboardStack.Screen name="DashboardHome" component={DashboardHome} />
+        <UserDashboardStack.Screen name="ChildProfile" component={ChildProfile} />
       </UserDashboardStack.Navigator>
     );
   }
@@ -102,7 +108,8 @@ export default function Navigation(props) {
           },
         })}
         tabBarOptions={{
-          activeTintColor: "maroon"
+          activeTintColor: "maroon",
+          //style:{height:50,borderTopWidth:0.5}
         }}
       >
         <Tab.Screen name="UserDashboard" options={{ tabBarLabel: "Dashboard" }} component={UserDashboardStackScreen} />
