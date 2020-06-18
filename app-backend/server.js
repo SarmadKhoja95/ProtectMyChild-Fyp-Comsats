@@ -32,6 +32,8 @@ app.get("/serverCheck", (req, res) => {
 //using routes
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/reports', require('./routes/api/report'));
+
 const port = process.env.port || 5000;
 
 //Start server
