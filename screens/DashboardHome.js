@@ -61,20 +61,9 @@ export default function DashboardHome(props) {
               <Block {...location}>
                 {/* <Text>Modal</Text> */}
               <Icon name="enviroment" family="AntDesign" size={100} color="maroon" />
-              <Image style={{ zIndex: 2, height: 50, width: 50, position: "absolute", top: 22, left: 25, borderRadius: 25 }} source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }} />
+              <Image style={{ zIndex: 2, height: 63, width: 63, position: "absolute", top: 12, left: 19, borderRadius: 30 }} source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }} />
             </Block>
           </Marker>
-          {/* <MapViewDirections
-            rotateEnabled
-            loadingEnabled
-            splitWaypoints
-            optimizeWaypoints
-            origin={location}
-            destination={{ latitude: 33.651710 , longitude: 73.156411 , }}
-            apikey={"AIzaSyCzQOxsRMtSvb0b5kudTGgObKJYey2AyI4"}
-            strokeWidth={5}
-            strokeColor="#BF0A30"
-          /> */}
         </MapView>
         :
         null}
@@ -123,7 +112,7 @@ export default function DashboardHome(props) {
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="user" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() =>{props.navigation.navigate("ChildProfile"); }}><Text size={22}>Profile</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() =>{props.navigation.navigate("ChildProfile");setModalVisible(false)}}><Text size={22}>Profile</Text></TouchableOpacity>
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="back" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
