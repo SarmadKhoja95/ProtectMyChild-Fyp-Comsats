@@ -25,6 +25,7 @@ import SelectReports from "../screens/SelectReports";
 import CitizenReporting from "../screens/CitizenReporting";
 import AddLocation from "../screens/AddLocation";
 import ChildProfile from "../screens//ChildProfile";
+import LocationHistory from "../screens/LocationHistory";
 
 
 
@@ -77,6 +78,7 @@ export default function Navigation(props) {
       <UserDashboardStack.Navigator initialRouteName="DashboardHome" headerMode="none">
         <UserDashboardStack.Screen name="DashboardHome" component={DashboardHome} />
         <UserDashboardStack.Screen name="ChildProfile" component={ChildProfile} />
+        <UserDashboardStack.Screen name="LocationHistory" component={LocationHistory} />
       </UserDashboardStack.Navigator>
     );
   }

@@ -115,7 +115,7 @@ export default function DashboardHome(props) {
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="history" family="MaterialIcons" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() => {setModalVisible(!modalVisible)}}><Text size={22}>History</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => {props.navigation.navigate("LocationHistory");setModalVisible(false)}}><Text size={22}>History</Text></TouchableOpacity>
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="direction" family="Entypo" size={28} style={{marginRight:"5%"}}/>
@@ -123,7 +123,7 @@ export default function DashboardHome(props) {
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="user" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() =>{props.navigation.navigate("ChildProfile"); setModalVisible(false)}}><Text size={22}>Profile</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() =>{props.navigation.navigate("ChildProfile"); }}><Text size={22}>Profile</Text></TouchableOpacity>
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
                 <Icon name="back" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
