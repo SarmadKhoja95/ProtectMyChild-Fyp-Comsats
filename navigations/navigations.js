@@ -26,6 +26,11 @@ import CitizenReporting from "../screens/CitizenReporting";
 import AddLocation from "../screens/AddLocation";
 import ChildProfile from "../screens//ChildProfile";
 import LocationHistory from "../screens/LocationHistory";
+import Reports from "../components/Reports";
+import ReportLocation from "../components/ReportLocation";
+
+
+
 
 
 
@@ -66,6 +71,8 @@ export default function Navigation(props) {
       <Stack.Navigator headerMode="none" initialRouteName="SelectReports">
         <Stack.Screen name="SelectReports" component={SelectReports} />
         <Stack.Screen name="AddReport" component={CitizenReporting} />
+        <Stack.Screen name="Reports" component={Reports} />
+        <Stack.Screen name="ReportLocation" component={ReportLocation} />
         <Stack.Screen name="AddLocation" component={AddLocation} />
       </Stack.Navigator>
     );
@@ -136,7 +143,7 @@ export default function Navigation(props) {
     );
   }
   // user.isAuthenticated
-  if (true) {
+  if (user.isAuthenticated) {
     return (
       <View style={{ flex: 1, backgroundColor: "pink", fontFamily: "openSans" }}>
         <NavigationContainer>

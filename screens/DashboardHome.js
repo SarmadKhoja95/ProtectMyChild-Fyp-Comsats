@@ -11,10 +11,25 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Linking from 'expo-linking';
 import MapViewDirections from 'react-native-maps-directions';
 
+
+//redux state
+import { useSelector, useDispatch } from 'react-redux';
+import { getReports } from "../api/report/reportAction";
+
+
 export default function DashboardHome(props) {
   const [status, setStatus] = useState("pending");
   const [location, setLocation] = useState({ longitude: null, latitude: null });
   const [modalVisible, setModalVisible] = useState(false);
+  
+  //redux state user
+  const user = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(getReports(user.data.token));
+  }, []);
+
   useEffect(() => {
     if (status !== "granted") {
       getLocation();
@@ -41,10 +56,14 @@ export default function DashboardHome(props) {
           <Text size={20} color="#fff" bold>PMC</Text>
         </Block>
         <Block flex style={styles.topBarIcons}>
-          <Icon name="adduser" family="AntDesign" size={20} color="#fff" />
-          <Icon name="reload1" family="AntDesign" size={20} color="#fff" />
           <Icon name="dots-three-vertical" family="Entypo" size={20} color="#fff" />
         </Block>
+      </Block>
+      <Block row style={styles.sectopBar}>
+      <TouchableOpacity onPress={()=>setModalVisible(true)}>
+        <Image style={{ zIndex: 2, height: 63, width: 63, borderRadius: 30 }} source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }} />
+        </TouchableOpacity>
+      <Icon name="plus" family="EvilIcons" size={60} color="white" />
       </Block>
       {status === "granted" ?
         <MapView initialRegion={{
@@ -72,7 +91,7 @@ export default function DashboardHome(props) {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
+              setModalVisible(false);
             }}
               >       
           <View style={styles.modalStyle}>
@@ -148,11 +167,24 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     alignItems: "center"
   },
+  sectopBar: {
+    position: "absolute",
+    top: 80,
+    height: 75,
+    backgroundColor: "rgba(105,105,105, 0.5)",
+    width: "100%",
+    zIndex: 1,
+    //paddingTop: Constants.statusBarHeight,
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center"
+  },
   topBarText: {
-    width: "50%",
+    width: "85%",
+    marginLeft:10
   },
   topBarIcons: {
-    width: "50%",
+    width: "15%",
     flexDirection: "row",
     justifyContent: "space-around"
   },
