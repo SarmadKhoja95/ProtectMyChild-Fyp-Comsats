@@ -39,7 +39,9 @@ router.get('/', auth, async (req, res) => {
   let { id } = req.user;
   try {
     let result = await Report.find({ user: id });
-    return res.status(200).json({ status: 200, msg: "success", data: result });
+    let active = result.filter(val => val.status === "active");
+    let closed = result.filter(val => val.status === "pending");
+    return res.status(200).json({ status: 200, msg: "success", data: { result, total: result.length, active: active.length, closed: closed.length } });
   }
   catch (e) {
     console.log(e.message);

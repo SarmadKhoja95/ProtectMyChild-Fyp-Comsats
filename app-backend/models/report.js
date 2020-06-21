@@ -40,6 +40,10 @@ const ReportSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user'
+  },
+  status: {
+    type: String,
+    default: 'active',
   }
 }, { timestamps: true });
 
