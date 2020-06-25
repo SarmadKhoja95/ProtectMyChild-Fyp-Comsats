@@ -34,6 +34,18 @@ const ReportSchema = new Schema({
     type: String,
     required: true,
   },
+  info: {
+    type: String,
+    default: null,
+  },
+  gender: {
+    type: String,
+    required: true,
+  },
+  radius: {
+    type: Number,
+    default: 0,
+  },
   location: {
     type: userLocation
   },

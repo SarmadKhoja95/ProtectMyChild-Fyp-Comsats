@@ -15,14 +15,14 @@ const auth = require('../../middleware/auth');
 router.post('/', auth, async (req, res) => {
   let { id } = req.user;
 
-  const { name, age, profilePicture, city, location, wearing } = req.body;
+  const { name, age, profilePicture, city, location, radius, wearing, gender, info } = req.body;
 
   //Simple Validation
   if (!name || !age || !city) {
     return res.status(404).json({ msg: "Please Enter All Fields" });
   }
   try {
-    const newReport = new Report({ name, age, profilePicture, city, wearing, location, user: id });
+    const newReport = new Report({ name, age, profilePicture, city, wearing, location, radius, gender, info, user: id });
     let result = await newReport.save();
     return res.status(200).json({ status: 200, msg: "success", data: result });
   }
