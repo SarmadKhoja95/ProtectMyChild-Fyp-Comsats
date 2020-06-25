@@ -10,10 +10,7 @@ import { Block, Text, Button, Icon } from 'galio-framework';
 import Loading from "../components/Loading";
 import Constants from "expo-constants";
 import moment from "moment";
-//redux state
-import { useSelector, useDispatch } from 'react-redux';
-import { getReports } from "../api/report/reportAction";
-
+// Icons
 import cityIcon from "../assets/city.png";
 import ageIcon from "../assets/age.png";
 import genderIcon from "../assets/gender.png";
@@ -71,16 +68,11 @@ const [modalVisible, setModalVisible] = useState(false);
 const [picModal, setPicModal] = useState(false);
 const [viewItem, setItem] = useState({});
 const [viewItemLocation, setItemLocation] = useState({ longitude: null, latitude: null });
-const dispatch = useDispatch();
-//redux state user
-// const user = useSelector(state => state.auth);
-// const report = useSelector(state => state.report.data.data);
-// const isGetLoading = useSelector(state => state.isLoading.GET_USER_REPORTS);
+//const [result, setResult] = useState(props.route.params.reports.result);
 
-// useEffect(() => { dispatch(getReports(user.data.token)); }, []);
 
 const viewLocation = (item) => {
-    props.navigation.navigate("ReportLocation", { location: item.location });
+    props.navigation.navigate("ReportLocation", { location: item.location , radius : item.radius });
   }
  const viewDetail = (item) => {
      setModalVisible(true);
@@ -120,19 +112,19 @@ const viewLocation = (item) => {
               </TouchableOpacity>
             </Block>
             <Block row>
-                <Block flex={0.3}>
+                {/* <Block flex={0.3}>
                 <Image style={{ zIndex: 2, height: 80, width: 80, borderRadius: 40 }} source={{ uri: viewItem.profilePicture }} />
-                </Block>
-                <Block flex={0.8} style={{marginLeft:15,paddingLeft:15}}>
-                <Text size={30} bold>{viewItem.name}</Text>
-                <Block row> 
-                <Block flex={0.5}>
+                </Block> */}
+                <Block flex={0.8} top>
+                <Text size={30} bold style={{marginBottom:5}}>{viewItem.name}</Text>
+                <Block row top> 
+                <Block top>
                 <Text size={15} color="grey">Longitude:</Text>
                 <Text size={15} color="grey">Latitude:</Text>
                 <Text size={15} color="grey">Accuracy:</Text>
                 <Text size={15} color="grey">Last update:</Text>
                 </Block>
-                <Block flex={0.5}>
+                <Block middle>
                 <Text size={15} color="grey">{viewItemLocation.longitude || null}</Text>
                 <Text size={15} color="grey">{viewItemLocation.latitude || null}</Text>
                 <Text size={15} color="grey">775m LBS</Text>
@@ -161,7 +153,7 @@ const viewLocation = (item) => {
                   <Text size={18}>Gender</Text>
                 </Block>
                 <Block flex={0.6} bottom>
-                  <Text size={18}>Male</Text>
+                  <Text size={18}>{viewItem.gender}</Text>
                 </Block>
               </Block>
               <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"black"}}>
@@ -194,7 +186,7 @@ const viewLocation = (item) => {
                   <Text size={18}>Info</Text>
                 </Block>
                 <Block flex={0.6} bottom>
-                  <Text size={15}>Serious matterlksdkjdslkfjdsokfnsdlknckshrrifnsdlsknvferoijlknsfknvor vroijvoidrjvoijriov oj </Text>
+                  <Text size={15}>{viewItem.info}</Text>
                 </Block>
               </Block>
             </Block>  
@@ -238,29 +230,26 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   container: {
+    flex:1,
     marginTop: StatusBar.currentHeight,
   },
   scene: {
     flex: 1,
   },
   item: {
-    //backgroundColor: '#e8e8e8',
     paddingTop: 15,
     paddingBottom: 15,
     paddingLeft: 10,
     marginVertical: 5,
     marginHorizontal: 5,
-    //justifyContent:"center",
     alignItems: "center",
     justifyContent: "space-between",
     borderBottomWidth: 2,
-    borderBottomColor: "#e8e8e8"
+    borderBottomColor: "#e8e8e8",
   },
   modalStyle:{
         flex: 1,
         justifyContent: "center",
-        //alignItems: "center",
-        //marginTop: 22
   },
   modalView: {
     margin: 50,
@@ -274,8 +263,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    //elevation: 15,
-    
   },
   picModalView: {
     margin:50,
@@ -288,8 +275,6 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    //elevation: 15,
-    
+    shadowRadius: 3.84,    
   },
 });

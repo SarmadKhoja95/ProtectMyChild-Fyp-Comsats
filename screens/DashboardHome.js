@@ -10,6 +10,9 @@ import * as Permissions from 'expo-permissions';
 import MapView, { Marker } from 'react-native-maps';
 import * as Linking from 'expo-linking';
 import MapViewDirections from 'react-native-maps-directions';
+import Loading from "../components/Loading";
+import Firebase from "../firebase";
+import downloadURL from "../api/report/reportAction";
 
 
 //redux state
@@ -24,16 +27,19 @@ export default function DashboardHome(props) {
   
   //redux state user
   const user = useSelector(state => state.auth);
+  const report = useSelector(state => state.report.data);
   const dispatch = useDispatch();
-  
+  const isLoading = useSelector(state => state.isLoading.GET_USER_REPORTS);
   useEffect(() => {
     dispatch(getReports(user.data.token));
   }, []);
-
+  
+ 
+//console.log(report.data.result[0].profilePicture)
   useEffect(() => {
     if (status !== "granted") {
       getLocation();
-    }
+    } 
   });
 
   const getLocation = async () => {
@@ -86,6 +92,7 @@ export default function DashboardHome(props) {
         </MapView>
         :
         null}
+        <Loading show={isLoading} />
           <Modal
             animationType="slide"
             transparent={true}

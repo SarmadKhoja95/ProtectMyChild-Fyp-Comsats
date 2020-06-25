@@ -2,23 +2,13 @@ import React, { useState, useEffect, useRef, createRef } from "react";
 import {
   View,
   StyleSheet,
-  Image,
-  Animated,
-  PanResponder,
-  UIManager,
-  findNodeHandle,
   TouchableOpacity,
-  ActivityIndicator,
-
 } from "react-native";
 import { Block, Icon, Text, Button, Input } from "galio-framework";
 
 import * as Location from 'expo-location';
-
 import * as Permissions from 'expo-permissions';
-
-import MapView, { Marker, Circle, PROVIDER_GOOGLE, } from 'react-native-maps';
-
+import MapView, { Marker, Circle } from 'react-native-maps';
 
 
 export default function Analytics(props) {
@@ -28,6 +18,7 @@ export default function Analytics(props) {
   const [radius, setRadius] = useState(1000);
   const [area, setArea] = useState({ longitude: 2, latitude: 2 });
   const areaHandler = useRef();
+  const circle = createRef(null);
 
   const areas = [{
     title: '8:05 PM',
@@ -80,13 +71,11 @@ export default function Analytics(props) {
         latitude: 33.489618,
         longitude: 73.1853384,
     },
-
   }]
+
   useEffect(() => {
     areaHandler.current = area;
   }, [area]);
-
-  const circle = createRef(null);
 
   useEffect(() => {
     if (status !== "granted") {
@@ -104,7 +93,6 @@ export default function Analytics(props) {
     }
     setStatus(status);
   };
-
 
   return (
     <View style={styles.container}>
@@ -125,9 +113,8 @@ export default function Analytics(props) {
                               radius={radius}
                               fillColor={ area.type == "report" ? "rgba(178,34,34 , 0.6)" : "rgba(112, 181, 44, 0.52)" }
                               strokeColor="rgba(85, 85, 100, 0.52)"
-                              />
-                      })
-                      }
+                              />        })
+                     }
                 </>
             </MapView>
             <Block style={{ position: "absolute", top: 50, left: 10 }}>
@@ -158,8 +145,7 @@ export default function Analytics(props) {
             </Block>
         </>
         :
-        null
-      }
+        null}
     </View >
   );
 }

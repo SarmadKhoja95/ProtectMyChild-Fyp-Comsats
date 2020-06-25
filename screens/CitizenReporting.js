@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
-  Switch, ScrollView,
-  Picker, ActionSheetIOS, Platform, TouchableOpacity, TouchableWithoutFeedback, Keyboard,
-  BackHandler,
-  PanResponder,
-  Image
+  StyleSheet, ScrollView, TouchableOpacity, Image
 } from "react-native";
 import Constants from "expo-constants";
 import { Icon, Block, Text, Input, Button, } from 'galio-framework';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as ImagePicker from 'expo-image-picker';
+
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
-import { addReport } from "../api/report/reportAction";
-import { create } from "../app-backend/models/report";
 
 export default function CitizenReporting(props) {
   const [Name, onChangeName] = React.useState('');
@@ -22,34 +17,57 @@ export default function CitizenReporting(props) {
   const [Gender, onChangeGender] = React.useState('');
   const [City, onChangeCity] = React.useState('');
   const [addInfo, onChangeInfo] = React.useState('');
-  //redux state user
-  const user = useSelector(state => state.auth);
-  const report = useSelector(state => state.report);
-  const isLoading = useSelector(state => state.isLoading.ADD_USER_REPORTS);
-  const dispatch = useDispatch();
+  let [selectedImage, setSelectedImage] = React.useState(null);
 
-  useEffect(() => {
-    if (report.isAdd) {
-      props.navigation.goBack();
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
     }
-  }, [report.isAdd]);
 
-  const saveReport = () => {
-    let profilePicture = "https://randomuser.me/api/portraits/men/40.jpg";
-    let location = {latitude: 33.489608,longitude: 73.0850208}
-    dispatch(addReport(Name, Age, profilePicture, City, location, Dress , user.data.token));
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.warn(pickerResult.uri);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
 
+
+  const addLocationNavigate = () => {
+    let profilePicture = selectedImage.localUri;
+    let data = { Name, Age, profilePicture, City, Dress, Gender, addInfo };
+    props.navigation.navigate("AddLocation", { data });
   }
 
   return (
-      <KeyboardAwareScrollView >
+    <KeyboardAwareScrollView >
       <Block style={styles.container}>
         <Block flex={0.4}>
           <Block center container flex={0.4} style={styles.headerContainer}>
-            <Text h4 color="black" >Lost Child's Information</Text>
-            <Image source={require("../assets/default.png")} style={styles.defImage} />
+            <Text h4 color="black" >Citizen Reporting</Text>
+            <TouchableOpacity onPress={openImagePickerAsync} style={styles.imgBlock}>
+              {selectedImage ?
+                <Block middle height={150} width={300} style={{ borderColor: "#bdbfbf", borderWidth: 0.5 }}>
+                  <Image
+                    source={{ uri: selectedImage.localUri }}
+                    style={styles.thumbnail}
+                  />
+                </Block> :
+                <Block middle height={150} width={300} style={{ backgroundColor: "rgba(178,34,34 , 0.8)", borderWidth: 0.5 }}>
+                  <Icon name="image" family="Entypo" size={30} color="white"/>
+                </Block>
+              }
+            </TouchableOpacity>
           </Block>
-          <Block item container center flex={0.6} style={{ paddingLeft: 10, paddingRight: 10}} >
+          <Block item container center flex={0.6} style={{ paddingLeft: 10, paddingRight: 10 }} >
+          <Text size={17} color="black">Please fill the lost child's info</Text>
             <Input
               style={styles.textArea}
               placeholder="Name"
@@ -97,14 +115,13 @@ export default function CitizenReporting(props) {
         </Block>
         <Block flex={0.6} container>
           <ScrollView keyboardShouldPersistTaps="handled">
-            <Block style={{ paddingVertical: 15, paddingHorizontal:15}}>
-              <Text h5 style={{paddingVertical:15}}>Report to:</Text>
-              <Block space="around" row style={{paddingBottom:15}}>
-              <TouchableOpacity><Text color="maroon" size={18}>PAK-CITIZEN PORTAL</Text></TouchableOpacity>
-              <TouchableOpacity><Text color="maroon" size={18}>POLICE STATION</Text></TouchableOpacity>
-              </Block>
-              <Button onPress={()=>props.navigation.navigate("AddLocation")} uppercase color="maroon" style={styles.iconBtn}><Icon color="white" name="location-on" family="Materialicons" size={25} style={{padding:8}}/><Text color="white" size={17}>Add Location</Text></Button>
-              <Button uppercase color="maroon" onPress={saveReport} loading={isLoading}>Submit</Button>
+            <Block style={{ paddingVertical: 15, paddingHorizontal: 15 }}>
+              {/* <Text h5 style={{ paddingVertical: 15 }}>Report to:</Text>
+              <Block space="around" row style={{ paddingBottom: 15 }}>
+                <TouchableOpacity><Text color="maroon" size={18}>PAK-CITIZEN PORTAL</Text></TouchableOpacity>
+                <TouchableOpacity><Text color="maroon" size={18}>POLICE STATION</Text></TouchableOpacity>
+              </Block> */}
+              <Button onPress={addLocationNavigate} uppercase color="maroon" style={styles.iconBtn}><Icon color="white" name="location-on" family="Materialicons" size={25} style={{ padding: 8 }} /><Text color="white" size={17}>Add Location</Text></Button>
             </Block>
           </ScrollView>
         </Block>
@@ -122,16 +139,16 @@ const styles = StyleSheet.create({
   textArea: {
     padding: 0,
     height: 70,
-    width:"80%",
+    width: "80%",
     borderRadius: 0,
-    borderWidth:0,
+    borderWidth: 0,
     borderBottomWidth: 1,
-    backgroundColor:"#F5F5F5"
+    backgroundColor: "#F5F5F5"
   },
-  textAreaInfo:{
+  textAreaInfo: {
     padding: 0,
     height: 120,
-    width:"80%",
+    width: "80%",
     borderRadius: 0,
   },
   headerContainer: {
@@ -150,12 +167,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-around"
 
   },
-  iconBtn:{
-    flex:1,
-    flexDirection:"row",
-    alignItems:"center",
+  imgBlock:{
+    marginTop:15,
+    marginBottom:15
+  },
+  iconBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
-    marginVertical:8   
+    marginVertical: 8
   },
   picker: {
     width: "100%",
@@ -167,10 +188,15 @@ const styles = StyleSheet.create({
     height: 44,
     color: 'red'
   },
-  defImage:{
-    marginVertical:15,
-    height:100,
-    width:130,
-    resizeMode:"cover"
+  defImage: {
+    marginVertical: 15,
+    height: 100,
+    width: 130,
+    resizeMode: "cover"
+  },
+  thumbnail: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover"
   }
 });

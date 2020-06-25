@@ -6,12 +6,10 @@ import {
   
 } from "react-native";
 import { Block, Text, Button, Icon } from 'galio-framework';
-
 import Constants from "expo-constants";
 
 export default function ChildProfile({ navigation }) {
   
-
   return (
     <Block style={styles.container}>
       <Block flex={0.3} style={{ width:"100%",justifyContent:"flex-start",alignItems:"center",paddingTop:15}}>

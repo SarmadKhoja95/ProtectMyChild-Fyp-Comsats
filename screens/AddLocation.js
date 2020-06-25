@@ -2,24 +2,17 @@ import React, { useState, useEffect, useRef, createRef } from "react";
 import {
   View,
   StyleSheet,
-  Image,
-  Animated,
-  PanResponder,
-  UIManager,
-  findNodeHandle,
   TouchableOpacity,
-  ActivityIndicator,
-
 } from "react-native";
 import { Block, Icon, Text, Button, Input } from "galio-framework";
 
 import * as Location from 'expo-location';
-
 import * as Permissions from 'expo-permissions';
+import MapView, { Marker, Circle } from 'react-native-maps';
 
-import MapView, { Marker, Circle, PROVIDER_GOOGLE, } from 'react-native-maps';
-
-
+//redux state
+import { useSelector, useDispatch } from 'react-redux';
+import { addReport } from "../api/report/reportAction";
 
 export default function AddLocation(props) {
 
@@ -29,22 +22,23 @@ export default function AddLocation(props) {
   const [area, setArea] = useState({ longitude: 2, latitude: 2 });
   
   const areaHandler = useRef();
+  const circle = createRef(null);
 
+  const user = useSelector(state => state.auth);
+  const report = useSelector(state => state.report);
+  const isLoading = useSelector(state => state.isLoading.ADD_USER_REPORTS);
+  const dispatch = useDispatch();
 
-  const postVideo = async (a) => {
-    // let video = props.route.params.video;
-    // let data = props.route.params.data;
-    // let location = await Location.getCurrentPositionAsync({ accuracy: 5 });
-    // data = { location: a, radius, ...data };
-    // dispatch(addVideo(video, data, user.data.token, userVideos.data));
-  };
+  useEffect(() => {
+    if (report.isAdd) {
+      props.navigation.navigate("SelectReports");
+    }
+  }, [report.isAdd]);
 
 
   useEffect(() => {
     areaHandler.current = area;
   }, [area]);
-
-  const circle = createRef(null);
 
   useEffect(() => {
     if (status !== "granted") {
@@ -65,69 +59,64 @@ export default function AddLocation(props) {
   };
 
 
+  const saveReport = () => {
+    let data = props.route.params.data;
+    dispatch(addReport(data.Name, data.Age, data.profilePicture, data.City, area, radius, data.Dress, data.Gender, data.addInfo, user.data.token, report.data.data.result));
+  }
+
   return (
     <View style={styles.container}>
       {status === "granted" ?
         <>
-            <MapView
-              zoomEnabled
-              initialRegion={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }} style={styles.mapStyle}>
-                <>
-                  <Marker
-                    draggable
-                    coordinate={area}
-                    onDragEnd={e => setArea({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
-                  />
-                  <Circle
-                    draggable
-                    center={area}
-                    radius={radius}
-                    fillColor="rgba(112, 181, 44, 0.52)"
-                    strokeColor="rgba(85, 85, 85, 0.52)"
-                  />
-                </>
-              {/*
-            <Marker
-              draggable
-              onPress={e => console.warn(e.nativeEvent.coordinate)}
-              onDragEnd={(e) => setArea(e.nativeEvent.coordinate)}
-              coordinate={area}
-            
-            </Marker>*/}
-            </MapView>
-            <Block style={{ position: "absolute", top: 50, left: 10 }}>
-              <Block>
-                <TouchableOpacity onPress={() => setRadius(radius + 200)}>
-                  <Icon color="#95a5a6" name="plussquare" family="AntDesign" size={30} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setRadius(radius - 200)}>
-                  <Icon color="#95a5a6" style={{ marginTop: 20 }} name="minussquare" family='AntDesign' size={30} />
-                </TouchableOpacity>
-              </Block>
-
+          <MapView
+            zoomEnabled
+            initialRegion={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }} style={styles.mapStyle}>
+            <>
+              <Marker
+                draggable
+                coordinate={area}
+                onDragEnd={e => setArea({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
+              />
+              <Circle
+                draggable
+                center={area}
+                radius={radius}
+                fillColor="rgba(112, 181, 44, 0.52)"
+                strokeColor="rgba(85, 85, 85, 0.52)"
+              />
+            </>
+          </MapView>
+          <Block style={{ position: "absolute", top: 50, left: 10 }}>
+            <Block>
+              <TouchableOpacity onPress={() => setRadius(radius + 200)}>
+                <Icon color="#95a5a6" name="plussquare" family="AntDesign" size={30} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setRadius(radius - 200)}>
+                <Icon color="#95a5a6" style={{ marginTop: 20 }} name="minussquare" family='AntDesign' size={30} />
+              </TouchableOpacity>
             </Block>
-            {/*
+          </Block>
             <Block style={styles.areaOverlay}>
               <Input type="number-pad" bgColor="grey" placeholder="Type Radius" placeholderTextColor="white" color="white" style={{ height: 50 }}
                 defaultValue={"1000"}
                 value={radius}
                 onChangeText={value => { setRadius(Number(value)); }} />
-            </Block> */}
-            
+            </Block>
           <Block style={styles.confirmOverlay} >
             <Button
+              loading={isLoading}
+              onPress={saveReport}
               style={styles.confirmButton}><Text color="#fff">Confirm</Text>
             </Button>
           </Block>
         </>
         :
-        null
-      }
+        null}
     </View >
   );
 }

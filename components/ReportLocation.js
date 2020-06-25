@@ -2,7 +2,7 @@ import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, View, } from 'react-native';
 import { Text, Button } from "galio-framework";
 import MapView, {
-  Marker,
+  Marker, Circle,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
@@ -53,6 +53,12 @@ export default function ReportLocation(props) {
           <Marker
             coordinate={{ latitude: props.route.params.location.latitude, longitude: props.route.params.location.longitude, }}
           />
+          <Circle
+                center={{latitude: props.route.params.location.latitude, longitude: props.route.params.location.longitude}}
+                radius={props.route.params.radius}
+                fillColor="rgba(112, 181, 44, 0.52)"
+                strokeColor="rgba(85, 85, 85, 0.52)"
+              />
           <MapViewDirections
             rotateEnabled
             loadingEnabled
