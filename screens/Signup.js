@@ -86,6 +86,10 @@ export default function Signup(props) {
           </Block>
           <Block center flex={0.3} >
             <Button loading={isLoading} onPress={signup} style={{ width: 280, marginTop: 20 }} uppercase color="maroon">Signup</Button>
+            <Block center row style={{marginTop:8}}>
+              <Text size={17} color="white">Already have an account? Go to </Text>
+              <TouchableOpacity onPress={()=>props.navigation.navigate("Login")}><Text size={18} color="white" bold>Login</Text></TouchableOpacity>
+              </Block>
           </Block>
         </Block>
       </LinearGradient>
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     fontFamily: "openSans",
+    height:"100%"
     // backgroundColor: "#f1c40f"
   },
   createAccountContainer: {

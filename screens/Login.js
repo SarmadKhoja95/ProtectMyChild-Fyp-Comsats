@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
 import { userLogin, resetUser } from "../api/auth/authAction";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 const window = Dimensions.get("window");
@@ -54,7 +55,7 @@ export default function Login(props) {
       <LinearGradient colors={['maroon', 'white']} style={{ flex: 1, height: dimensions.window.height }}>
         <Block style={styles.container}>
           <Block flex={0.3} style={styles.createAccountContainer}>
-            <Text h3 bold color="white" >Login</Text>
+            <Text h3 bold color="white" >Parent Login</Text>
           </Block>
           <View style={{ flex: 0.5, alignItems: "center", }}>
             <Block flex={0.6} style={{ alignItems: "center" }}>
@@ -66,6 +67,10 @@ export default function Login(props) {
             </Block>
             <Block center flex={0.6}>
               <Button loading={isLoading} onPress={() => login()} style={{ width: 280 }} uppercase color="maroon">Login</Button>
+              <Block center row style={{marginTop:8}}>
+              <Text size={17} color="white">Not a registered user? Go to </Text>
+              <TouchableOpacity onPress={()=>props.navigation.navigate("Signup")}><Text size={18} color="white" bold>Signup</Text></TouchableOpacity>
+              </Block>
             </Block>
           </View>
         </Block>
