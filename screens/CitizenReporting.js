@@ -39,7 +39,6 @@ export default function CitizenReporting(props) {
     setSelectedImage({ localUri: pickerResult.uri });
   };
 
-
   const addLocationNavigate = () => {
     let profilePicture = selectedImage.localUri;
     let data = { Name, Age, profilePicture, City, Dress, Gender, addInfo };
@@ -116,11 +115,6 @@ export default function CitizenReporting(props) {
         <Block flex={0.6} container>
           <ScrollView keyboardShouldPersistTaps="handled">
             <Block style={{ paddingVertical: 15, paddingHorizontal: 15 }}>
-              {/* <Text h5 style={{ paddingVertical: 15 }}>Report to:</Text>
-              <Block space="around" row style={{ paddingBottom: 15 }}>
-                <TouchableOpacity><Text color="maroon" size={18}>PAK-CITIZEN PORTAL</Text></TouchableOpacity>
-                <TouchableOpacity><Text color="maroon" size={18}>POLICE STATION</Text></TouchableOpacity>
-              </Block> */}
               <Button onPress={addLocationNavigate} uppercase color="maroon" style={styles.iconBtn}><Icon color="white" name="location-on" family="Materialicons" size={25} style={{ padding: 8 }} /><Text color="white" size={17}>Add Location</Text></Button>
             </Block>
           </ScrollView>

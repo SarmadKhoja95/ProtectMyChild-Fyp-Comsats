@@ -10,6 +10,7 @@ import { Block, Text, Button, Icon } from 'galio-framework';
 import Loading from "../components/Loading";
 import Constants from "expo-constants";
 import moment from "moment";
+import * as Linking from 'expo-linking';
 // Icons
 import cityIcon from "../assets/city.png";
 import ageIcon from "../assets/age.png";
@@ -70,6 +71,15 @@ const [viewItem, setItem] = useState({});
 const [viewItemLocation, setItemLocation] = useState({ longitude: null, latitude: null });
 //const [result, setResult] = useState(props.route.params.reports.result);
 
+const openPCP = () => {
+  Linking.openURL(`https://play.google.com/store/apps/details?id=com.govpk.citizensportal`);
+}
+
+const openNearbyStation = (longitude,latitude) => {
+  if( latitude != null && longitude != null){
+    Linking.openURL(`https://www.google.com/maps/search/police+station/@${latitude},${longitude},12z`);
+  }
+}
 
 const viewLocation = (item) => {
     props.navigation.navigate("ReportLocation", { location: item.location , radius : item.radius });
@@ -98,7 +108,8 @@ const viewLocation = (item) => {
         />
         <Modal
             animationType="slide"
-            transparent={true}
+            presentationStyle="fullScreen"
+            //transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
               setModalVisible(false);
@@ -106,28 +117,28 @@ const viewLocation = (item) => {
               >     
           <View style={styles.modalStyle}>
           <View style={styles.modalView}>
-            <Block row bottom>
+            <Block row top style={{paddingBottom:20}}>
             <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}>
-              <Icon name="closecircleo" family="AntDesign" size={30}/>
+              <Icon name="left" family="AntDesign" size={30}/>
               </TouchableOpacity>
             </Block>
-            <Block row>
-                {/* <Block flex={0.3}>
-                <Image style={{ zIndex: 2, height: 80, width: 80, borderRadius: 40 }} source={{ uri: viewItem.profilePicture }} />
-                </Block> */}
+            <Block middle>
+                <Image style={{ height: 150, width: "100%", resizeMode:"cover" }} source={{ uri: viewItem.profilePicture }} />
+                </Block>
+            <Block row middle style={{paddingTop:15}}>
                 <Block flex={0.8} top>
                 <Text size={30} bold style={{marginBottom:5}}>{viewItem.name}</Text>
                 <Block row top> 
                 <Block top>
                 <Text size={15} color="grey">Longitude:</Text>
                 <Text size={15} color="grey">Latitude:</Text>
-                <Text size={15} color="grey">Accuracy:</Text>
+                <Text size={15} color="grey">Radius:</Text>
                 <Text size={15} color="grey">Last update:</Text>
                 </Block>
-                <Block middle>
+                <Block top style={{paddingLeft:30}}>
                 <Text size={15} color="grey">{viewItemLocation.longitude || null}</Text>
                 <Text size={15} color="grey">{viewItemLocation.latitude || null}</Text>
-                <Text size={15} color="grey">775m LBS</Text>
+                <Text size={15} color="grey">{viewItem.radius} meters</Text>
                 <Text size={15} color="grey">{moment(viewItem.updatedAt).startOf('hour').fromNow()}</Text>
                 </Block>
                 </Block>
@@ -189,7 +200,14 @@ const viewLocation = (item) => {
                   <Text size={15}>{viewItem.info}</Text>
                 </Block>
               </Block>
-            </Block>  
+            </Block>
+            <Block middle>
+              <Text size={16} color="grey" style={{ paddingVertical: 15 }}>You can report to concerned authorities</Text>
+              <Block style={{ paddingBottom: 15 }}>
+                <TouchableOpacity onPress={openPCP}><Text color="maroon" size={18} style={{backgroundColor:"maroon",color:"white",paddingHorizontal:25,paddingVertical:10}}>Pak-Citizen Portal</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>openNearbyStation(viewItemLocation.longitude,viewItemLocation.latitude)}><Text color="maroon" size={18} style={{backgroundColor:"maroon",color:"white",paddingHorizontal:25,paddingVertical:10,marginTop:5}}>Nearby Police Station</Text></TouchableOpacity>
+              </Block>
+            </Block>
           </View>
           </View>
       </Modal>
@@ -202,7 +220,7 @@ const viewLocation = (item) => {
               setPicModal(false);
             }}
               >     
-          <View style={styles.modalStyle}>
+          <View style={styles.picModalStyle}>
           <View style={styles.picModalView}>
             <Block row bottom>
             <TouchableOpacity onPress={()=>setPicModal(!picModal)}>
@@ -211,7 +229,7 @@ const viewLocation = (item) => {
             </Block>
             <Block>
                 <Block>
-                <Image style={{ height: 300, width: 300 }} source={{ uri: viewItem.profilePicture }} />
+                <Image style={{ height: 300, width: 350 }} source={{ uri: viewItem.profilePicture }} />
                 </Block>
             </Block>  
           </View>
@@ -249,13 +267,13 @@ const styles = StyleSheet.create({
   },
   modalStyle:{
         flex: 1,
-        justifyContent: "center",
+        //justifyContent: "center",
   },
   modalView: {
-    margin: 50,
+    //margin: 50,
     backgroundColor: "white",
     padding: 20,
-    alignItems: "center",
+    //alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -264,8 +282,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
+  picModalStyle:{
+    flex: 1,
+    justifyContent: "center",
+},
   picModalView: {
-    margin:50,
+    //margin:50,
     backgroundColor: "white",
     padding: 10,
     alignItems: "center",

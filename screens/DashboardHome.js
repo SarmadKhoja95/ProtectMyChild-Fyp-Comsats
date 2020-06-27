@@ -13,6 +13,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import Loading from "../components/Loading";
 import Firebase from "../firebase";
 import downloadURL from "../api/report/reportAction";
+import appIcon from "../assets/icon2.png";
 
 
 //redux state
@@ -58,11 +59,12 @@ export default function DashboardHome(props) {
   return (
     <Block flex style={styles.container}>
       <Block row style={styles.topBar}>
-        <Block style={styles.topBarText}>
-          <Text size={20} color="#fff" bold>PMC</Text>
+        <Block row style={styles.topBarText}>
+          <Image style={{ height: 70, width: 70  }} source={ appIcon } />
+          <Text size={20} color="rgb(178,34,34)" bold>PMC</Text>
         </Block>
         <Block flex style={styles.topBarIcons}>
-          <Icon name="dots-three-vertical" family="Entypo" size={20} color="#fff" />
+          <Icon name="dots-three-vertical" family="Entypo" size={20} color="maroon" />
         </Block>
       </Block>
       <Block row style={styles.sectopBar}>
@@ -165,18 +167,20 @@ const styles = StyleSheet.create({
   topBar: {
     position: "absolute",
     top: 0,
-    height: 80,
-    backgroundColor: "maroon",
+    height: 85,
+    backgroundColor: "rgb(255,255,255)",
     width: "100%",
     zIndex: 1,
     paddingTop: Constants.statusBarHeight,
     paddingLeft: 10,
     paddingRight: 10,
-    alignItems: "center"
+    alignItems: "center",
+    borderBottomWidth:0.5,
+    borderBottomColor:"rgb(178,34,34)"
   },
   sectopBar: {
     position: "absolute",
-    top: 80,
+    top: 85,
     height: 75,
     backgroundColor: "rgba(105,105,105, 0.5)",
     width: "100%",
@@ -188,7 +192,9 @@ const styles = StyleSheet.create({
   },
   topBarText: {
     width: "85%",
-    marginLeft:10
+    marginLeft:10,
+    display:"flex",
+    alignItems:"center"
   },
   topBarIcons: {
     width: "15%",

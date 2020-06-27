@@ -31,7 +31,7 @@ export default function AddLocation(props) {
 
   useEffect(() => {
     if (report.isAdd) {
-      props.navigation.navigate("SelectReports");
+      props.navigation.navigate("SelectReports",{ isReportAdd : true });
     }
   }, [report.isAdd]);
 

@@ -117,7 +117,7 @@ export default function Analytics(props) {
                      }
                 </>
             </MapView>
-            <Block style={{ position: "absolute", top: 50, left: 10 }}>
+            {/* <Block style={{ position: "absolute", top: 50, left: 10 }}>
               <Block>
                 <TouchableOpacity onPress={() => setRadius(radius + 200)}>
                   <Icon color="#95a5a6" name="plussquare" family="AntDesign" size={30} />
@@ -126,7 +126,7 @@ export default function Analytics(props) {
                   <Icon color="#95a5a6" style={{ marginTop: 20 }} name="minussquare" family='AntDesign' size={30} />
                 </TouchableOpacity>
               </Block>
-            </Block>
+            </Block> */}
             <Block style={{ position: "absolute", top: 50, right: 20 , backgroundColor:"white",padding:10}}>
               <Block row style={{display:"flex",alignItems:"center"}}> 
                 <Icon color="rgb(178,34,34)" name="controller-record" family="Entypo" size={30} />
