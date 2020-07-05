@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
-const config = require('config');
-const ObjectID = require("bson-objectid");
+
 //Item model
 const Report = require('../../models/report');
 const auth = require('../../middleware/auth');
@@ -42,6 +39,22 @@ router.get('/', auth, async (req, res) => {
     let active = result.filter(val => val.status === "active");
     let closed = result.filter(val => val.status === "pending");
     return res.status(200).json({ status: 200, msg: "success", data: { result, total: result.length, active: active.length, closed: closed.length } });
+  }
+  catch (e) {
+    console.log(e.message);
+    return res.status(500).json({ status: 500, msg: e.message });
+  }
+});
+
+// @route  GET api/reports/
+//@desc  Get Reports Of User
+
+router.get('/all', auth, async (req, res) => {
+  let { id } = req.user;
+  try {
+    let reports = await Report.find();
+    let allReports = reports.filter(val => val.user != id);
+    return res.status(200).json({ status: 200, msg: "success", data: { result : allReports , total: allReports.length } });
   }
   catch (e) {
     console.log(e.message);
