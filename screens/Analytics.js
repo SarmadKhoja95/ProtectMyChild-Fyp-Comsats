@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, createRef } from "react";
 import {
   View,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import { Block, Icon, Text, Button, Input } from "galio-framework";
 
@@ -17,12 +16,9 @@ export default function Analytics(props) {
 
   const [status, setStatus] = useState("pending");
   const [location, setLocation] = useState({ longitude: null, latitude: null });
-  const [radius, setRadius] = useState(1000);
-  const [isZone, setZone] = useState(false);
   const [area, setArea] = useState({ longitude: 2, latitude: 2 });
   const areaHandler = useRef();
-  const circle = createRef(null);
-  const report = useSelector(state => state.report.data.data.result);
+  const isZone = useSelector(state => state.report.isZone);
 
   useEffect(() => {
     areaHandler.current = area;
@@ -38,7 +34,6 @@ export default function Analytics(props) {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       let location = await Location.getCurrentPositionAsync({ accuracy: 5 });
-      //console.log(location);
       setArea({ longitude: parseFloat(location.coords.longitude), latitude: parseFloat(location.coords.latitude) });
       setLocation(location);
     }
@@ -61,11 +56,11 @@ export default function Analytics(props) {
                 longitudeDelta: 0.0421,
               }} style={styles.mapStyle}>
                 <>
-                    { report.map((row) => {
+                    { isZone.result.map((row) => {
                         return ( <>
                                 <Marker
                                 coordinate={row.location}
-                              />
+                                />
                               <Circle
                               center={row.location}
                               radius={row.radius}
@@ -82,11 +77,18 @@ export default function Analytics(props) {
                 <Text size={15} style={{paddingLeft:5}}>Reported cases</Text>
               </Block>
             </Block>
-              <Block style={{ position: "absolute", bottom: 20 , backgroundColor:"green",padding:15,borderRadius:30}}>
+            {isZone.isZone ?
+              <Block style={{ position: "absolute", bottom: 20 , backgroundColor:"maroon",padding:15,borderRadius:30}}>
                <Block row style={{display:"flex",alignItems:"center"}}> 
-               <Text size={18} color="white" style={{paddingLeft:5}}>You are in safe zone</Text>
+               <Text size={18} color="white">You are in reported zone</Text>
              </Block>
             </Block>
+            :
+            <Block style={{ position: "absolute", bottom: 20 , backgroundColor:"rgba(112, 181, 44, 0.9)",padding:15,borderRadius:30}}>
+               <Block row style={{display:"flex",alignItems:"center"}}> 
+               <Text size={18} color="white">You are in safe zone</Text>
+             </Block>
+            </Block>}
         </>
         :
         null}

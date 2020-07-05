@@ -7,108 +7,52 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import AwesomeAlert from 'react-native-awesome-alerts';
-
-
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker , Circle} from 'react-native-maps';
 import * as Linking from 'expo-linking';
+import moment from "moment";
+import Loading from "../components/Loading";
 
+//redux state
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function HelpOthers(props) {
   const [status, setStatus] = useState("pending");
   const [location, setLocation] = useState({ longitude: null, latitude: null });
-  const [locList, setLocList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isAlert, setAlert] = useState(false);
   const [selectedChild, setSelectChild] = useState({});
+  const [selectedlocation, setSelectedLocation] = useState({ longitude: null, latitude: null });
 
+  const isLoading = useSelector(state => state.isLoading.GET_NEARBY_REPORTS);
+  const nearbyReports = useSelector(state => state.report.isNearby);
 
-  showAlert = () => {
+  const showAlert = () => {
     setAlert(true);
   };
  
-  hideAlert = () => {
+  const hideAlert = () => {
    setAlert(false);
   };
+ 
   useEffect(() => {
     if (status !== "granted") {
       getLocation();
     }
   });
-  const markers = [{
-    title: '8:05 PM',
-    profile:"https://randomuser.me/api/portraits/men/45.jpg",
-    coordinates: {
-        latitude: 33.481195,
-        longitude: 73.0853384,
-    },
-  },
-  {
-    title: '9:06 PM',
-    profile:"https://randomuser.me/api/portraits/men/9.jpg",
-    coordinates: {
-        latitude: 33.489608,
-        longitude: 73.0850208,
-    },
- 
-  },
-  {
-    title: 'hey',
-    profile:"https://randomuser.me/api/portraits/men/82.jpg",
-    coordinates: {
-        latitude: 32.489618,
-        longitude: 73.1853384,
-    },
-
-  },,
-  {
-    title: 'hey',
-    profile:"https://randomuser.me/api/portraits/men/74.jpg",
-    coordinates: {
-        latitude: 32.489618,
-        longitude: 72.1853384,
-    },
-
-  },
-  {
-    title: 'hey',
-    profile:"https://randomuser.me/api/portraits/men/40.jpg",
-    coordinates: {
-        latitude: 31.489618,
-        longitude: 73.1853384,
-    },
-
-  },
-  {
-    title: 'hey',
-    profile:"https://randomuser.me/api/portraits/women/5.jpg",
-    coordinates: {
-        latitude: 33.489618,
-        longitude: 73.1853384,
-    },
-
-  },
-  {
-    title: 'hey',
-    profile:"https://randomuser.me/api/portraits/lego/1.jpg",
-    coordinates: {
-        latitude: 32.489618,
-        longitude: 74.1853384,
-    },
-
-  }]
-  const showDirections = () => {
-    Linking.openURL(`https://www.google.com/maps/dir/${location.latitude},${location.longitude}/${33.651710},${73.156411}`);
+  
+  const navigateTo = (des) => {
+    Linking.openURL(`https://www.google.com/maps/dir/${location.latitude},${location.longitude}/${des.latitude},${des.longitude}`);
   }
+
   const getLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       let location = await Location.getCurrentPositionAsync({ accuracy: 5 });
       setLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
-      setLocList(markers);
     }
     setStatus(status);
   };
-
+ 
   return (
     <Block flex style={styles.container}>
       {status === "granted" ?
@@ -118,74 +62,91 @@ export default function HelpOthers(props) {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-          //onPress={e => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
           style={styles.mapStyle}>
-       {
-        markers.map((marker) => {
+          {nearbyReports.result.map((val) => {
            return <Marker
-                coordinate={{latitude: marker.coordinates.latitude, longitude: marker.coordinates.longitude}}
-                //title={marker.title}
+                coordinate={val.location}
                 onPress={()=>{
-                  //setModalVisible(true)
                   showAlert();
-                  setSelectChild(marker);
+                  setSelectChild(val);
+                  setSelectedLocation(val.location);
                 }}
-               //onDragEnd={(e) => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
             >
               <Block {...location} style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
               <Icon name="check-box-outline-blank" family="MaterialIcons" size={90} color="maroon" />
               <Icon name="location-on" family="MaterialIcons" size={90} color="maroon" style={{position: "absolute", top: 7, left: 0}}/>
-              <Image style={{ zIndex: 2, height: 58, width: 58, position: "absolute", top: 17, left: 16}} source={{ uri: marker.profile }} />
+              <Image style={{ zIndex: 2, height: 58, width: 58, position: "absolute", top: 17, left: 16}} source={{ uri: val.profilePicture }} />
             </Block>
-            </Marker>
+            </Marker> 
         })
         }
+         <Circle
+           center={location}
+           radius={5000}
+           fillColor="rgba(112, 181, 44, 0.22)"
+           strokeColor="rgba(85, 85, 100, 0.42)"
+           />
         </MapView>
         :
         null}
+          <Block style={{ position: "absolute", top: 60 , backgroundColor:"rgba(128,0,0,0.8)",paddingTop:15,paddingBottom:15,paddingRight:20,paddingLeft:20}}>
+               <Block row style={{display:"flex",alignItems:"center"}}> 
+               <Text size={18} color="white">{nearbyReports.total} Reports found near you</Text>
+             </Block>
+            </Block>
+       <Loading show={isLoading} />
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(false);
+            }}
               >       
-          <View style={styles.modalStyle}>
+          <Block flex={0.95} style={{padding:20}}>
           <View style={styles.modalView}>
-            <Block row top>
-                <Block flex={0.3}>
-                <Image style={{ zIndex: 2, height: 80, width: 80, borderRadius: 40 }} source={{ uri: selectedChild.profile }} />
+            <Block row top style={{paddingBottom:20}}>
+            <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}>
+              <Icon name="left" family="AntDesign" size={30}/>
+              </TouchableOpacity>
+            </Block>
+            <Block middle>
+                <Image style={{ height: 150, width: "100%", resizeMode:"cover" }} source={{ uri: selectedChild.profilePicture }} />
                 </Block>
-                <Block flex={0.8} style={{marginLeft:15,paddingLeft:15}}>
-                <Text size={30} bold>John</Text>
-                <Block row> 
+                <Block row middle style={{paddingTop:15}}>
+                <Block flex={0.8} top>
+                <Block row space="between" style={{width:"100%",alignItems:"center",marginBottom:5}}>
+                <Text size={30} bold >{selectedChild.name}</Text>
+                <TouchableOpacity onPress={()=>navigateTo(selectedlocation)}><Icon name="direction" family="Entypo" size={25} color="maroon" /></TouchableOpacity>
+                </Block>
+                <Block row space="between" style={{width:"100%"}}> 
                 <Block flex={0.5}>
-                <Text size={15} color="grey">Coordinates:</Text>
-                <Text size={15} color="grey">Accuracy:</Text>
+                <Text size={15} color="grey">Longitude:</Text>
+                <Text size={15} color="grey">Latitude:</Text>
+                <Text size={15} color="grey">Radius:</Text>
                 <Text size={15} color="grey">Last update:</Text>
+                <Text size={15} color="grey">Age:</Text>
+                <Text size={15} color="grey">Gender:</Text>
+                <Text size={15} color="grey">Wearing:</Text>
+                <Text size={15} color="grey">City:</Text>
+                <Text size={15} color="grey">Additional Info:</Text>
                 </Block>
-                <Block flex={0.5}>
-                <Text size={15} color="grey">48.95,55.30</Text>
-                <Text size={15} color="grey">775m LBS</Text>
-                <Text size={15} color="grey">12:30 19/06</Text>
+                <Block flex={0.65} bottom>
+                <Text size={15} color="grey">{selectedlocation.longitude || null}</Text>
+                <Text size={15} color="grey">{selectedlocation.latitude || null}</Text>
+                <Text size={15} color="grey">{selectedChild.radius} meters</Text>
+                <Text size={15} color="grey">{moment(selectedChild.updatedAt).startOf('hour').fromNow()}</Text>
+                <Text size={15} color="grey">{selectedChild.age}</Text>
+                <Text size={15} color="grey">{selectedChild.gender}</Text>
+                <Text size={15} color="grey">{selectedChild.wearing}</Text>
+                <Text size={15} color="grey">{selectedChild.city}</Text>
+                <Text size={15} color="grey">{selectedChild.info}</Text>
                 </Block>
                 </Block>
                 </Block>
             </Block>
-            <Block style={{backgroundColor:"white",width:"100%",marginTop:20,borderWidth:0.5,borderColor:"lightgrey"}}>
-            <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
-                <Icon name="user" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() =>{setModalVisible(false)}}><Text size={22}>Reported Data</Text></TouchableOpacity>
-              </Block>
-              <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
-                <Icon name="direction" family="Entypo" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() => {showDirections()}}><Text size={22}>Navigate to</Text></TouchableOpacity>
-              </Block>
-              <Block row style={{padding:10,borderBottomWidth:0.5,borderColor:"lightgrey"}}>
-                <Icon name="back" family="AntDesign" size={28} style={{marginRight:"5%"}}/>
-                <TouchableOpacity onPress={() => {setModalVisible(!modalVisible)}}><Text size={22}>Back</Text></TouchableOpacity>
-              </Block>
-            </Block>  
           </View>
-          </View>
+          </Block>
       </Modal>
       <AwesomeAlert
           show={isAlert}
@@ -244,30 +205,19 @@ export default function HelpOthers(props) {
         justifyContent: "space-around"
       },
       modalStyle:{
-        position:"absolute",
-        bottom:0,
-        left:0,
-        right:0,
-        //width:"80%",
+        width:"95%",
+
       },
       modalView: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        margin: 50,
-        //marginBottom:10,
         backgroundColor: "white",
-        //borderRadius: 20,
         padding: 20,
-        alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 2
         },
         shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        //elevation: 15,
-        
+        shadowRadius: 3.84,        
       },
     });
