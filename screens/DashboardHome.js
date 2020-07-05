@@ -6,19 +6,14 @@ import { Block, Text, Icon } from "galio-framework";
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-
 import MapView, { Marker } from 'react-native-maps';
 import * as Linking from 'expo-linking';
-import MapViewDirections from 'react-native-maps-directions';
 import Loading from "../components/Loading";
-import Firebase from "../firebase";
-import downloadURL from "../api/report/reportAction";
 import appIcon from "../assets/icon2.png";
-
 
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
-import { getReports } from "../api/report/reportAction";
+import { getReports, getNearbyReports, checkIsZone } from "../api/report/reportAction";
 
 
 export default function DashboardHome(props) {
@@ -31,12 +26,19 @@ export default function DashboardHome(props) {
   const report = useSelector(state => state.report.data);
   const dispatch = useDispatch();
   const isLoading = useSelector(state => state.isLoading.GET_USER_REPORTS);
+
   useEffect(() => {
     dispatch(getReports(user.data.token));
   }, []);
-  
+
+  useEffect(() => {
+    dispatch(getNearbyReports(user.data.token));
+  }, []);
+
+  useEffect(() => {
+    dispatch(checkIsZone(user.data.token));
+  }, []);
  
-//console.log(report.data.result[0].profilePicture)
   useEffect(() => {
     if (status !== "granted") {
       getLocation();
@@ -55,7 +57,7 @@ export default function DashboardHome(props) {
   const showDirections = () => {
     Linking.openURL(`https://www.google.com/maps/dir/${location.latitude},${location.longitude}/${33.651710},${73.156411}`);
   }
-// console.log(modalVisible);
+
   return (
     <Block flex style={styles.container}>
       <Block row style={styles.topBar}>
@@ -82,11 +84,10 @@ export default function DashboardHome(props) {
         }}
           onPress={e => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
           style={styles.mapStyle}>
-            <Marker draggable onPress={()=>setModalVisible(true)}
+            <Marker onPress={()=>setModalVisible(true)}
             coordinate={location}
             onDragEnd={(e) => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}>
               <Block {...location}>
-                {/* <Text>Modal</Text> */}
               <Icon name="enviroment" family="AntDesign" size={100} color="maroon" />
               <Image style={{ zIndex: 2, height: 63, width: 63, position: "absolute", top: 12, left: 19, borderRadius: 30 }} source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }} />
             </Block>
@@ -157,7 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    //justifyContent: 'center',
     fontFamily: "openSans",
   },
   mapStyle: {
@@ -185,7 +185,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(105,105,105, 0.5)",
     width: "100%",
     zIndex: 1,
-    //paddingTop: Constants.statusBarHeight,
     paddingLeft: 10,
     paddingRight: 10,
     alignItems: "center"
@@ -206,16 +205,13 @@ const styles = StyleSheet.create({
     bottom:0,
     left:0,
     right:0,
-    //width:"80%",
   },
   modalView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     margin: 50,
-    //marginBottom:10,
     backgroundColor: "white",
-    //borderRadius: 20,
     padding: 20,
     alignItems: "center",
     shadowColor: "#000",
@@ -224,8 +220,6 @@ const styles = StyleSheet.create({
       height: 2
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    //elevation: 15,
-    
+    shadowRadius: 3.84,    
   },
 });
