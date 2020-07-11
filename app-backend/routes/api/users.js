@@ -14,7 +14,7 @@ const auth = require('../../middleware/auth');
 
 router.post('/', async (req, res) => {
 
-  const { name, email, password } = req.body;
+  const { name, email, password ,phone,  pushToken} = req.body;
 
   //Simple Validation
   if (!name || !email || !password) {
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(404).json({ status: false, msg: "User Already Registered " });
-    const newUser = new User({ name, email, password });
+    const newUser = new User({ name, email, password, phone, pushToken});
     //create salt and has
     bcrypt.genSalt(10, (err, salt) => {
       if (err) return res.status(500).json({ status: false, msg: err.message });
@@ -58,6 +58,29 @@ router.post('/', async (req, res) => {
   }
 });
 
-
+router.put('/updateUser', auth, (req, res) => {
+  const { id } = req.user;
+  const { name, phone, profilePicture, city, isNew } = req.body;
+  let data = {};
+  if (isNew) {
+    data = { name: name, phone: phone, profilePicture: profilePicture, city: city };
+  }
+  else {
+    data = { name: name, phone: phone, city: city }
+  }
+  User.findByIdAndUpdate(id, data,
+    { new: true }, (err, data) => {
+      if (err) {
+        return res.status(500).send({
+          status: 500,
+          error: err.message,
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        data: data,
+      });
+    });
+});
 
 module.exports = router;

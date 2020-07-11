@@ -22,7 +22,15 @@ const UserSchema = new Schema({
   city: {
     type: String,
     default: ''
-  }
+  },
+  phone: {
+    type: String,
+    default: ''
+  },
+  pushToken: {
+    type: String,
+    default: null
+  },
 }, { timestamps: true });
 
 const User = mongoose.model('user', UserSchema);
