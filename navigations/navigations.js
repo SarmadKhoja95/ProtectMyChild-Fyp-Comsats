@@ -28,10 +28,9 @@ import ChildProfile from "../screens//ChildProfile";
 import LocationHistory from "../screens/LocationHistory";
 import Reports from "../components/Reports";
 import ReportLocation from "../components/ReportLocation";
-
-
-
-
+import HelpRequest from "../components/HelpRequest";
+import UserProfile from "../screens/UserProfile";
+import EditProfile from "../screens/EditProfile";
 
 
 
@@ -74,6 +73,7 @@ export default function Navigation(props) {
         <Stack.Screen name="Reports" component={Reports} />
         <Stack.Screen name="ReportLocation" component={ReportLocation} />
         <Stack.Screen name="AddLocation" component={AddLocation} />
+        <Stack.Screen name="HelpRequest" component={HelpRequest} />
       </Stack.Navigator>
     );
   }
@@ -86,6 +86,8 @@ export default function Navigation(props) {
         <UserDashboardStack.Screen name="DashboardHome" component={DashboardHome} />
         <UserDashboardStack.Screen name="ChildProfile" component={ChildProfile} />
         <UserDashboardStack.Screen name="LocationHistory" component={LocationHistory} />
+        <UserDashboardStack.Screen name="UserProfile" component={UserProfile} />
+        <UserDashboardStack.Screen name="EditProfile" component={EditProfile} />
       </UserDashboardStack.Navigator>
     );
   }

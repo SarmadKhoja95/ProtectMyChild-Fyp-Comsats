@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet, Image, TouchableHighlight, Modal, View, TouchableOpacity
+  StyleSheet, Image, Modal, View, TouchableOpacity
 } from "react-native";
 import { Block, Text, Icon } from "galio-framework";
 import Constants from 'expo-constants';
@@ -23,6 +23,7 @@ export default function DashboardHome(props) {
   
   //redux state user
   const user = useSelector(state => state.auth);
+  console.log(user)
   const report = useSelector(state => state.report.data);
   const dispatch = useDispatch();
   const isLoading = useSelector(state => state.isLoading.GET_USER_REPORTS);
@@ -66,7 +67,7 @@ export default function DashboardHome(props) {
           <Text size={20} color="rgb(178,34,34)" bold>PMC</Text>
         </Block>
         <Block flex style={styles.topBarIcons}>
-          <Icon name="dots-three-vertical" family="Entypo" size={20} color="maroon" />
+          <TouchableOpacity onPress={()=>props.navigation.navigate("UserProfile")}><Icon name="dots-three-vertical" family="Entypo" size={20} color="maroon" /></TouchableOpacity>
         </Block>
       </Block>
       <Block row style={styles.sectopBar}>
