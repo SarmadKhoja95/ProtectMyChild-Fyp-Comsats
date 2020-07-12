@@ -22,7 +22,7 @@ import dressIcon from "../assets/shirt.png";
 function EmptyList() {
     return (
       <Block flex middle style={{ paddingTop: 20 }}>
-        <Text h5>No reports available</Text>
+        <Text h5>No help requests found !</Text>
       </Block>
     );
   }
@@ -32,45 +32,51 @@ function EmptyList() {
     return (
       <Block style={styles.item}>
       <Block flex={1} row>
-        <Block flex={0.2} center>
-        <TouchableOpacity onPress={()=>props.viewPicture(props.item)}>
+        {/* <Block flex={0.2} center>
+        <TouchableOpacity>
         <Image style={{ height: 70, width: 70 }} source={{ uri: props.item.profilePicture}} />
         </TouchableOpacity>
-        </Block>
+        </Block> */}
         <Block flex={0.4}top style={{paddingLeft:15}}>
-        <Text size={18} bold>{props.item.name}</Text>
-        <Block row>
-        <Text size={15}>Age: </Text>
-        <Text size={15} color="grey">{props.item.age}</Text>
+        <Text size={18} bold>Name</Text>
         </Block>
-        <Block row>
+        <Block flex={0.3} top>
+          {/* <Text size={15}>{moment(props.item.createdAt).format("MMM Do YY")}</Text>
+          <Text size={15}>{moment(props.item.createdAt).format("LT")}</Text> */}
+         <Block row>
         <Text size={15}>City: </Text>
-        <Text size={15} color="grey">{props.item.city}</Text>
+        <Text size={15} color="grey">City</Text>
+        </Block>
+        <Block row>
+        <Text size={15}>Contact: </Text>
+        <Text size={15} color="grey">0000</Text>
         </Block>
         </Block>
-        <Block flex={0.3} middle>
-          <Text size={15}>{moment(props.item.createdAt).format("MMM Do YY")}</Text>
-          <Text size={15}>{moment(props.item.createdAt).format("LT")}</Text>
+        <Block row flex={0.15} middle>
+        <TouchableOpacity>
+          <Icon name="done" family="MaterialIcons" color="green" size={25} style={{ padding: 3 }} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="cross" color="#BF0A30" family="Entypo" size={25} style={{ padding: 3 }} />
+        </TouchableOpacity>
         </Block>
-        <Block flex={0.15} middle>
-        <TouchableOpacity onPress={()=> props.viewDetail(props.item)}>
+        {/* <Block flex={0.15} middle>
+        <TouchableOpacity>
           <Icon name="eye" family="Entypo" color="black" size={25} style={{ padding: 3 }} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.viewLocation(props.item)}>
+        <TouchableOpacity>
           <Icon name="location" color="#BF0A30" family="Entypo" size={25} style={{ padding: 3 }} />
         </TouchableOpacity>
-        </Block>
+        </Block> */}
       </Block>
-      <Block middle style={{width:"40%",padding:5,borderWidth:0.7,borderColor:"rgb(185,0,0)"}}>
-      <TouchableOpacity onPress={() => props.viewHelpRequest(props.item)}>
+      {/* <Block middle style={{width:"40%",padding:5,borderWidth:0.7,borderColor:"rgb(185,0,0)"}}>
         <Text size={15}>1 Help Request</Text>
-        </TouchableOpacity>
-      </Block>
+      </Block> */}
       </Block>
     );
   }  
 
-export default function Reports( props ) {
+export default function HelpRequest( props ) {
 
 const [modalVisible, setModalVisible] = useState(false);
 const [picModal, setPicModal] = useState(false);
@@ -100,20 +106,17 @@ const viewLocation = (item) => {
     setPicModal(true);
     setItem(item);
  }
- const viewHelpRequest = (item) => {
-  props.navigation.navigate("HelpRequest");
-}
 
   return (
       <View style={styles.container}>
           <Block middle style={{padding:10,paddingBottom:0}}>
-          <Text h3 color="maroon">Open Reports</Text>
+          <Text h3 color="maroon">Help Requests</Text>
           <Icon name="minus" family="AntDesign" size={70} color="maroon" style={{margin:-15}}/>
           </Block>
         <FlatList
-          data={props.route.params.reports.result}
+          data={[1,2,3]}
           ListEmptyComponent={<EmptyList />}
-          renderItem={({ item }) => <Item item={item} viewLocation={viewLocation} viewDetail={viewDetail} viewPicture={viewPicture} viewHelpRequest={viewHelpRequest} />}
+          renderItem={({ item }) => <Item item={item} viewLocation={viewLocation} viewDetail={viewDetail} viewPicture={viewPicture} />}
           keyExtractor={item => item.id}
         />
         <Modal
