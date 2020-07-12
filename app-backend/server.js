@@ -33,6 +33,7 @@ app.get("/serverCheck", (req, res) => {
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/reports', require('./routes/api/report'));
+app.use('/api/help', require('./routes/api/help'));
 
 const port = process.env.port || 5000;
 
