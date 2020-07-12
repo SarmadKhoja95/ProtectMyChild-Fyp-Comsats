@@ -23,6 +23,19 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.fyp.pmc",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyCsKL0E8ws-ByCC_LV2DX-WKPIS7f9tqkM"
+        },
+        "googleMaps": {
+          "apiKey": "AIzaSyCzQOxsRMtSvb0b5kudTGgObKJYey2AyI4"
+        }
+      },
+      "versionCode": 1
     }
   }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet, Image, Alert, Modal, View, TouchableOpacity
 } from "react-native";
-import { Block, Text, Icon } from "galio-framework";
+import { Block, Text, Icon, Input, Button } from "galio-framework";
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -10,6 +10,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import MapView, { Marker , Circle} from 'react-native-maps';
 import * as Linking from 'expo-linking';
 import moment from "moment";
+import * as ImagePicker from 'expo-image-picker';
 import Loading from "../components/Loading";
 
 //redux state
@@ -22,6 +23,7 @@ export default function HelpOthers(props) {
   const [isAlert, setAlert] = useState(false);
   const [selectedChild, setSelectChild] = useState({});
   const [selectedlocation, setSelectedLocation] = useState({ longitude: null, latitude: null });
+  let [selectedImage, setSelectedImage] = React.useState(null);
 
   const isLoading = useSelector(state => state.isLoading.GET_NEARBY_REPORTS);
   const nearbyReports = useSelector(state => state.report.isNearby);
@@ -39,6 +41,26 @@ export default function HelpOthers(props) {
       getLocation();
     }
   });
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.warn(pickerResult.uri);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
   
   const navigateTo = (des) => {
     Linking.openURL(`https://www.google.com/maps/dir/${location.latitude},${location.longitude}/${des.latitude},${des.longitude}`);
@@ -145,6 +167,34 @@ export default function HelpOthers(props) {
                 </Block>
                 </Block>
             </Block>
+            <Block row middle style={{paddingTop:20}}>
+              <Text size={16} color="grey" bold>Incase if the child is found / suspected</Text>
+              </Block> 
+              <Block middle flex={0.7}>
+              <Block row style={{width:"85%",alignItems:"center",justifyContent:"space-between",paddingTop:15}}>
+              <Text size={15} color="grey">Upload image</Text>
+              <TouchableOpacity onPress={openImagePickerAsync}>
+                <Icon name="camera" family="AntDesign" size={28} color="maroon" />
+                </TouchableOpacity>
+              </Block>
+              <Block row style={{width:"85%",alignItems:"center",justifyContent:"space-between",paddingTop:5}}>
+              <Text size={15} color="grey">Important note</Text>
+              <Input
+              style={styles.textAreaInfo}
+              //placeholder="Additional info (optional)"
+              placeholderTextColor="grey"
+              maxLength={100}
+              //onChangeText={text => onChangeInfo(text)} value={addInfo}
+            />
+              </Block>
+              </Block>
+            <Block middle flex={0.5} style={{width:"100%"}} >
+            <Button
+              //loading={isLoading}
+              //onPress={saveReport}
+              style={{width:150,backgroundColor:"maroon"}}><Text color="#fff">Confirm</Text>
+            </Button>
+          </Block>
           </View>
           </Block>
       </Modal>
@@ -152,7 +202,7 @@ export default function HelpOthers(props) {
           show={isAlert}
           showProgress={false}
           title="Help Confirmation"
-          message="Are you sure you want to help ? After confirmation, Parent will be notified and you will receive the necessary information of the child upon approval."
+          message="Are you sure you want to help the child ? After confirmation, Parent will be notified and you will receive the necessary information of the child upon approval."
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
@@ -219,5 +269,12 @@ export default function HelpOthers(props) {
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,        
+      },
+      textAreaInfo: {
+        padding: 0,
+        height: 60,
+        //width: "80%",
+        borderRadius: 0,
+        borderColor:"maroon"
       },
     });
