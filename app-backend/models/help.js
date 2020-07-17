@@ -2,12 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const HelpSchema = new Schema({
+  reportId: {
+    type: String,
+    default:null
+  },
+  reportData:{
+    type: Object,
+    default:{}
+  },
   fromUserId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
+    default:null
   },
   toUserId: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null
+    type: String,
+    default:null
   },
   childPicture: {
     type: String,

@@ -88,7 +88,7 @@ export const userSignup = (name, email, password) => async dispatch => {
   try {
     let pushToken = await getToken();
     //Request Body
-    const body = JSON.stringify({ name, email, password, phone, pushToken});
+    const body = JSON.stringify({ name, email, password, pushToken});
     const url = config.apiUrl + "users";
     let res = await axios.post(url, body, options);
     const store = storeUser({ email, password });

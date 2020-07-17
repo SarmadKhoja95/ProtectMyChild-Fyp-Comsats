@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet, Image, Alert, Modal, View, TouchableOpacity
+  StyleSheet, Image, ToastAndroid, Modal, View, TouchableOpacity
 } from "react-native";
 import { Block, Text, Icon, Input, Button } from "galio-framework";
 import Constants from 'expo-constants';
@@ -12,21 +12,31 @@ import * as Linking from 'expo-linking';
 import moment from "moment";
 import * as ImagePicker from 'expo-image-picker';
 import Loading from "../components/Loading";
+const isEmpty = require("lodash/isEmpty");
+
 
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
+import { addHelp , updateChildFoundData } from "../api/help/helpAction";
 
 export default function HelpOthers(props) {
   const [status, setStatus] = useState("pending");
   const [location, setLocation] = useState({ longitude: null, latitude: null });
   const [modalVisible, setModalVisible] = useState(false);
   const [isAlert, setAlert] = useState(false);
+  const [Note, onChangeNote] = React.useState('');
   const [selectedChild, setSelectChild] = useState({});
   const [selectedlocation, setSelectedLocation] = useState({ longitude: null, latitude: null });
   let [selectedImage, setSelectedImage] = React.useState(null);
 
   const isLoading = useSelector(state => state.isLoading.GET_NEARBY_REPORTS);
   const nearbyReports = useSelector(state => state.report.isNearby);
+  const user = useSelector(state => state.auth);
+  const isHelpLoading = useSelector(state => state.isLoading.ADD_HELP_REPORTS);
+  const isUpdateLoading = useSelector(state => state.isLoading.UPDATE_FOUND_CHILD);
+  const help = useSelector(state => state.help.data);
+
+  const dispatch = useDispatch();
 
   const showAlert = () => {
     setAlert(true);
@@ -74,7 +84,47 @@ export default function HelpOthers(props) {
     }
     setStatus(status);
   };
- 
+
+  const checkHelpStatus = (selectedReport) => {
+    if(!isEmpty(help.data.helpSend)){
+       help.data.helpSend.map((val)=>{
+      if(val.reportId === selectedReport._id){
+        // help request found
+        if(val.status === "pending"){ToastAndroid.show('Your Help Request is not accepted by the Parent yet', ToastAndroid.SHORT);}
+        else{
+          //  status ongoing
+          setModalVisible(true);
+        }
+      }
+      else{
+        // no selected help req found 
+        showAlert();
+      }
+    })
+    }
+    else{
+      // no selected help req found
+     showAlert();
+    }
+  }
+  
+
+  const saveHelpData = () => {
+    dispatch(addHelp( user.data.user, selectedChild.user, selectedChild._id, selectedChild, user.data.token));
+    ToastAndroid.show('Your request has been sent to Child Parent', ToastAndroid.SHORT);
+  }
+
+  const submitChildData = () => {
+    if( selectedImage != null){
+      dispatch(updateChildFoundData( selectedImage.localUri , Note, selectedChild._id, user.data.token));
+      ToastAndroid.show('Child Found Data Has Been Sent to the Parent', ToastAndroid.LONG);
+      setModalVisible(false);
+    }
+    else{
+      ToastAndroid.show('Please upload an image first', ToastAndroid.SHORT);
+    }  
+  }
+
   return (
     <Block flex style={styles.container}>
       {status === "granted" ?
@@ -89,7 +139,7 @@ export default function HelpOthers(props) {
            return <Marker
                 coordinate={val.location}
                 onPress={()=>{
-                  showAlert();
+                  checkHelpStatus(val);
                   setSelectChild(val);
                   setSelectedLocation(val.location);
                 }}
@@ -117,6 +167,7 @@ export default function HelpOthers(props) {
              </Block>
             </Block>
        <Loading show={isLoading} />
+       <Loading show={isHelpLoading} />
         <Modal
             animationType="fade"
             transparent={true}
@@ -184,14 +235,14 @@ export default function HelpOthers(props) {
               //placeholder="Additional info (optional)"
               placeholderTextColor="grey"
               maxLength={100}
-              //onChangeText={text => onChangeInfo(text)} value={addInfo}
+              onChangeText={text => onChangeNote(text)} value={Note}
             />
               </Block>
               </Block>
             <Block middle flex={0.5} style={{width:"100%"}} >
             <Button
-              //loading={isLoading}
-              //onPress={saveReport}
+              loading={isUpdateLoading}
+              onPress={submitChildData}
               style={{width:150,backgroundColor:"maroon"}}><Text color="#fff">Confirm</Text>
             </Button>
           </Block>
@@ -217,7 +268,7 @@ export default function HelpOthers(props) {
           }}
           onConfirmPressed={() => {
             hideAlert();
-            setModalVisible(true);
+            saveHelpData();
           }}
         />
         </Block>
