@@ -7,8 +7,9 @@ import {
 } from "react-native";
 import { Block, Text, Button, Icon } from 'galio-framework';
 import Constants from "expo-constants";
+import moment from "moment";
 
-export default function ChildProfile({ navigation }) {
+export default function ChildProfile(props) {
   
   return (
     <Block style={styles.container}>
@@ -17,11 +18,11 @@ export default function ChildProfile({ navigation }) {
           <Image
             style={{ height: 150, width: 150 }}
             source={{
-              uri: "https://randomuser.me/api/portraits/men/1.jpg"
+              uri: props.route.params.child.picture
             }}
           />
           <Block middle>
-              <Text h4>John</Text>
+              <Text h4>{props.route.params.child.name}</Text>
           </Block>
         </Block>
       </Block>
@@ -29,26 +30,10 @@ export default function ChildProfile({ navigation }) {
         <Block flex={0.15} row space="between" style={{ width:"100%" }}>
           <Block>
               <Text size={20} bold>Last Location</Text>
-              <Text size={15}>Jan 15 2020 - 02:45 PM</Text>
+              <Text size={15}>{moment(props.route.params.child.position.time).format('lll')}</Text>
             </Block>
           <Block>
-              <Text size={15}>30 mins ago</Text>
-            </Block>
-        </Block>
-        <Block flex={0.2} row space="between" style={{ width:"100%", alignItems:"center"}}>
-            <Block row middle>
-            <Icon name="target" family="Feather" size={26} style={{paddingRight:10}}/>
-            <Block>
-              <Text size={18} bold>Accuracy</Text>
-              <Text size={14}>55 meters</Text>
-            </Block>
-            </Block>
-            <Block row middle>
-            <Icon name="direction" family="Entypo" size={26} style={{marginRight:10}}/>
-            <Block>
-              <Text size={18} bold>Accuracy</Text>
-              <Text size={14}>55 meters</Text>
-            </Block>
+              <Text size={15}>{moment(props.route.params.child.position.time).fromNow()}</Text>
             </Block>
         </Block>
         <Block flex={0.2} row space="between" style={{ width:"100%", alignItems:"center"}}>
@@ -56,14 +41,30 @@ export default function ChildProfile({ navigation }) {
             <Icon name="map-pin" family="Feather" size={26} style={{paddingRight:10}}/>
             <Block>
               <Text size={18} bold>Latitude</Text>
-              <Text size={14}>55.23453</Text>
+              <Text size={14}>{props.route.params.child.position.latitude}</Text>
             </Block>
             </Block>
             <Block row middle>
             <Icon name="map-pin" family="Feather" size={26} style={{paddingRight:10}}/>
             <Block>
               <Text size={18} bold>Longitude</Text>
-              <Text size={14}>78.23453</Text>
+              <Text size={14}>{props.route.params.child.position.longitude}</Text>
+            </Block>
+            </Block>
+        </Block>
+        <Block flex={0.2} row space="between" style={{ width:"100%", alignItems:"center"}}>
+            <Block row middle>
+            <Icon name="contacts" family="AntDesign" size={26} style={{paddingRight:10}}/>
+            <Block>
+              <Text size={18} bold>Contact No</Text>
+              <Text size={14}>{props.route.params.child.contact}</Text>
+            </Block>
+            </Block>
+            <Block row middle>
+            <Icon name="user" family="Feather" size={26} style={{marginRight:10}}/>
+            <Block style={{width:"45%"}}>
+              <Text size={18} bold>Parent</Text>
+              <Text size={14}>{props.route.params.parent}</Text>
             </Block>
             </Block>
         </Block>
