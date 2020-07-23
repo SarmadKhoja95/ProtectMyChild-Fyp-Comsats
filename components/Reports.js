@@ -7,7 +7,6 @@ import {
   
 } from "react-native";
 import { Block, Text, Button, Icon } from 'galio-framework';
-import Loading from "../components/Loading";
 import Constants from "expo-constants";
 import moment from "moment";
 import * as Linking from 'expo-linking';
@@ -60,11 +59,6 @@ function EmptyList() {
           <Icon name="location" color="#BF0A30" family="Entypo" size={25} style={{ padding: 3 }} />
         </TouchableOpacity>
         </Block>
-      </Block>
-      <Block middle style={{width:"40%",padding:5,borderWidth:0.7,borderColor:"rgb(185,0,0)"}}>
-      <TouchableOpacity onPress={() => props.viewHelpRequest(props.item)}>
-        <Text size={15}>1 Help Request</Text>
-        </TouchableOpacity>
       </Block>
       </Block>
     );

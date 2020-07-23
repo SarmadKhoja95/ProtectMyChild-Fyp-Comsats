@@ -14,6 +14,7 @@ import appIcon from "../assets/icon2.png";
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
 import { getReports, getNearbyReports, checkIsZone } from "../api/report/reportAction";
+import { getHelpReports } from "../api/help/helpAction";
 
 
 export default function DashboardHome(props) {
@@ -38,6 +39,7 @@ export default function DashboardHome(props) {
 
   useEffect(() => {
     dispatch(checkIsZone(user.data.token));
+    dispatch(getHelpReports(user.data.user._id, user.data.token));
   }, []);
  
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function DashboardHome(props) {
           <Text size={20} color="rgb(178,34,34)" bold>PMC</Text>
         </Block>
         <Block flex style={styles.topBarIcons}>
-          <TouchableOpacity onPress={()=>props.navigation.navigate("UserProfile")}><Icon name="dots-three-vertical" family="Entypo" size={20} color="maroon" /></TouchableOpacity>
+          <TouchableOpacity onPress={()=>props.navigation.navigate("UserProfile")}><Icon name="user" family="AntDesign" size={25} color="maroon" /></TouchableOpacity>
         </Block>
       </Block>
       <Block row style={styles.sectopBar}>

@@ -5,6 +5,9 @@ const RequestsSchema = new Schema({
    helpId: {
        type: mongoose.Schema.Types.ObjectId,
       },
+   reportId: {
+        type: mongoose.Schema.Types.ObjectId,
+      },
   fromUserId: {
     type: mongoose.Schema.Types.ObjectId,
   },

@@ -101,14 +101,14 @@ export default function Navigation(props) {
             let iconName;
             let iconFamily;
             if (route.name === 'UserDashboard') {
-              iconName = "home";
+              iconName = "child-care";
               iconFamily = "MaterialIcons";
             } else if (route.name === 'HelpingOthers') {
               iconName = "slideshare";
               iconFamily = "Entypo";
             }
             else if (route.name === "Report") {
-              iconName = "warning";
+              iconName = "dashboard";
               iconFamily = "AntDesign";
             }
             else if (route.name === "Analytics") {
@@ -123,8 +123,8 @@ export default function Navigation(props) {
           //style:{height:50,borderTopWidth:0.5}
         }}
       >
-        <Tab.Screen name="UserDashboard" options={{ tabBarLabel: "Dashboard" }} component={UserDashboardStackScreen} />
-        <Tab.Screen name="Report" options={{ tabBarLabel: "Report" }} component={CitizenReportingNavigations} />
+        <Tab.Screen name="UserDashboard" options={{ tabBarLabel: "Kids" }} component={UserDashboardStackScreen} />
+        <Tab.Screen name="Report" options={{ tabBarLabel: "Dashboard" }} component={CitizenReportingNavigations} />
         <Tab.Screen name="HelpingOthers" options={{ tabBarLabel: "Help" }} component={HelpingOthers} />
         <Tab.Screen name="Analytics" options={{ tabBarLabel: "Analytics" }} component={Analytics} />
       </Tab.Navigator>
@@ -158,7 +158,7 @@ export default function Navigation(props) {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff", fontFamily: "openSans" }}>
         <NavigationContainer>
-          <Stack.Navigator style={{ fontFamily: "openSans" }} headerMode="none" initialRouteName="Signup">
+          <Stack.Navigator style={{ fontFamily: "openSans" }} headerMode="none" initialRouteName="Login">
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Signup" component={SignupScreen} />
           </Stack.Navigator>

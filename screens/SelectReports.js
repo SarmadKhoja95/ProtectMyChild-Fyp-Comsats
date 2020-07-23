@@ -12,6 +12,7 @@ import Loading from "../components/Loading";
 import Constants from "expo-constants";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { getReports } from "../api/report/reportAction";
+import { getHelpReports } from "../api/help/helpAction";
 
 //redux state
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,7 +21,9 @@ export default function SelectReports(props) {
   //redux state user
   const user = useSelector(state => state.auth);
   const report = useSelector(state => state.report.data);
+  const help = useSelector(state => state.help.data);
   const isLoading = useSelector(state => state.isLoading.GET_USER_REPORTS);
+  const isHelpLoading = useSelector(state => state.isLoading.GET_HELP_REPORTS);
   const dispatch = useDispatch();
 
  const showAlert = () => {
@@ -41,6 +44,10 @@ export default function SelectReports(props) {
     dispatch(getReports(user.data.token));
   }, []);
 
+  useEffect(() => {
+    dispatch(getHelpReports(user.data.user._id, user.data.token));
+  }, []);
+
   return (
       <Block style={styles.container}>
         <Block flex={0.2} style={{ width: "100%", justifyContent: "flex-start", alignItems: "center", paddingTop: 15 }}>
@@ -50,7 +57,7 @@ export default function SelectReports(props) {
               source={pic}
             />
             <Block middle>
-              <Text h5 bold color="grey">Complaints</Text>
+              <Text h5 bold color="grey">My Dashboard</Text>
             </Block>
           </Block>
         </Block>
@@ -69,6 +76,20 @@ export default function SelectReports(props) {
             <Block style={{ backgroundColor: "#50C878", width: "48%", padding: 15 }}>
               <Text size={35} color="white" >{report.data.closed || 0}</Text>
               <Block><Text size={20} color="white">Closed Complaints</Text></Block>
+            </Block>
+          </Block>
+          <Block row space="between" style={{ height: "35%", marginTop: "3%", width: "100%" }}>
+            <Block style={{ backgroundColor: "#6C5B7B", width: "48%", padding: 15 }}>
+              <TouchableOpacity onPress={() => props.navigation.navigate("HelpRequest",{ results : help.data.pending })}>
+                <Text size={35} color="white" >{help.data.pendingLength || 0}</Text>
+                <Block><Text size={20} color="white">Pending Help Rquests</Text></Block>
+              </TouchableOpacity>
+            </Block>
+            <Block style={{ backgroundColor: "#FFA8B6", width: "48%", padding: 15 }}>
+            <TouchableOpacity onPress={() => props.navigation.navigate("HelpRequest",{ results : help.data.ongoing })}>
+              <Text size={35} color="white" >{help.data.ongoingLength || 0}</Text>
+              <Block><Text size={20} color="white">Ongoing Helps</Text></Block>
+              </TouchableOpacity>
             </Block>
           </Block>
         </Block>
@@ -99,6 +120,7 @@ export default function SelectReports(props) {
          }}
        />
         <Loading show={isLoading} />
+        <Loading show={isHelpLoading} />
       </Block >
 
     );
