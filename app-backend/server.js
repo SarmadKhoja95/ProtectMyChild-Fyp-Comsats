@@ -7,6 +7,8 @@ const app = express();
 //cors for cross domain request
 var cors = require('cors');
 
+const emulator = require("./tracking-emulator");
+
 //express body parser'
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -26,6 +28,7 @@ app.use(cors({
   'preflightContinue': false
 }));
 
+emulator();
 app.get("/serverCheck", (req, res) => {
   return res.json({ "server": "running now!!" });
 });
@@ -34,6 +37,7 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/reports', require('./routes/api/report'));
 app.use('/api/help', require('./routes/api/help'));
+app.use('/api/children', require('./routes/api/children'));
 
 const port = process.env.port || 5000;
 
