@@ -8,7 +8,7 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
 import MapView, { Marker } from 'react-native-maps';
-
+import moment from "moment";
 
 
 export default function MapHistory(props) {
@@ -24,55 +24,55 @@ export default function MapHistory(props) {
   const markers = [{
     title: '8:05 PM',
     coordinates: {
-        latitude: 33.481195,
-        longitude: 73.0853384,
+      latitude: 33.481195,
+      longitude: 73.0853384,
     },
   },
   {
     title: '9:06 PM',
     coordinates: {
-        latitude: 33.489608,
-        longitude: 73.0850208,
-    },
- 
-  },
-  {
-    title: 'hey',
-    coordinates: {
-        latitude: 32.489618,
-        longitude: 73.1853384,
-    },
-
-  },,
-  {
-    title: 'hey',
-    coordinates: {
-        latitude: 32.489618,
-        longitude: 72.1853384,
+      latitude: 33.489608,
+      longitude: 73.0850208,
     },
 
   },
   {
     title: 'hey',
     coordinates: {
-        latitude: 31.489618,
-        longitude: 73.1853384,
+      latitude: 32.489618,
+      longitude: 73.1853384,
+    },
+
+  }, ,
+  {
+    title: 'hey',
+    coordinates: {
+      latitude: 32.489618,
+      longitude: 72.1853384,
     },
 
   },
   {
     title: 'hey',
     coordinates: {
-        latitude: 33.489618,
-        longitude: 73.1853384,
+      latitude: 31.489618,
+      longitude: 73.1853384,
     },
 
   },
   {
     title: 'hey',
     coordinates: {
-        latitude: 32.489618,
-        longitude: 74.1853384,
+      latitude: 33.489618,
+      longitude: 73.1853384,
+    },
+
+  },
+  {
+    title: 'hey',
+    coordinates: {
+      latitude: 32.489618,
+      longitude: 74.1853384,
     },
 
   }]
@@ -98,77 +98,78 @@ export default function MapHistory(props) {
         }}
           //onPress={e => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
           style={styles.mapStyle}>
-       {
-        markers.map((marker) => {
-           return <Marker
-                coordinate={{latitude: marker.coordinates.latitude, longitude: marker.coordinates.longitude}}
-                title={marker.title}
-               //onDragEnd={(e) => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
-            />
-        })
-        }
+          {
+            props.data.map((marker) => {
+              return <Marker
+                key={marker._id}
+                coordinate={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }}
+                title={moment(marker.time).format("LT")}
+              //onDragEnd={(e) => setLocation({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })}
+              />
+            })
+          }
         </MapView>
         :
         null}
-        </Block>
-     );
-    }
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        alignItems: 'center',
-        //justifyContent: 'center',
-        fontFamily: "openSans",
-      },
-      mapStyle: {
-        width: "100%",
-        height: "100%",
-      },
-      topBar: {
-        position: "absolute",
-        top: 0,
-        height: 80,
-        backgroundColor: "maroon",
-        width: "100%",
-        zIndex: 1,
-        paddingTop: Constants.statusBarHeight,
-        paddingLeft: 10,
-        paddingRight: 10,
-        alignItems: "center"
-      },
-      topBarText: {
-        width: "50%",
-      },
-      topBarIcons: {
-        width: "50%",
-        flexDirection: "row",
-        justifyContent: "space-around"
-      },
-      modalStyle:{
-        position:"absolute",
-        bottom:0,
-        left:0,
-        right:0,
-        //width:"80%",
-      },
-      modalView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        margin: 50,
-        //marginBottom:10,
-        backgroundColor: "white",
-        //borderRadius: 20,
-        padding: 20,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        //elevation: 15,
-        
-      },
-    });
+    </Block>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    //justifyContent: 'center',
+    fontFamily: "openSans",
+  },
+  mapStyle: {
+    width: "100%",
+    height: "100%",
+  },
+  topBar: {
+    position: "absolute",
+    top: 0,
+    height: 80,
+    backgroundColor: "maroon",
+    width: "100%",
+    zIndex: 1,
+    paddingTop: Constants.statusBarHeight,
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center"
+  },
+  topBarText: {
+    width: "50%",
+  },
+  topBarIcons: {
+    width: "50%",
+    flexDirection: "row",
+    justifyContent: "space-around"
+  },
+  modalStyle: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    //width:"80%",
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 50,
+    //marginBottom:10,
+    backgroundColor: "white",
+    //borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    //elevation: 15,
+
+  },
+});

@@ -132,17 +132,21 @@ const viewLocation = (item) => {
 
   return (
       <View style={styles.container}>
+        <Block middle style={{padding:10,paddingBottom:0}}>
+       <Text h3 color="maroon">Helping Parents</Text>
+          <Icon name="minus" family="AntDesign" size={70} color="maroon" style={{margin:-15}}/>
+          </Block>  
         <FlatList
            data={props.route.params.results}
           ListEmptyComponent={<EmptyList />}
           renderItem={({ item }) => <Item item={item} changeStatus={changeStatus} viewLocation={viewLocation} viewDetail={viewDetail} viewPicture={viewPicture} viewFoundPic={viewFoundPic} />}
           keyExtractor={item => item.id}
-        />
+          />
         <Loading show={isStatusLoading} />
         <Loading show={isHelpLoading} />
         <Modal
             animationType="fade"
-            transparent={true}
+            transparent={true} 
             visible={modalVisible}
             onRequestClose={() => {
               setModalVisible(false);

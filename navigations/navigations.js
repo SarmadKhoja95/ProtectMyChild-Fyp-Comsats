@@ -19,6 +19,10 @@ import SignupScreen from "../screens/Signup";
 
 
 import DashboardHome from "../screens/DashboardHome";
+import AddChild from "../screens/AddChild";
+import AddChildLocation from "../screens/AddChildLocation";
+import AddChildSafeZones from "../screens/AddChildSafeZones";
+import ChildSafeZone from "../components/ChildSafeZone";
 import HelpingOthers from "../screens/HelpOthers";
 import Analytics from "../screens/Analytics";
 import SelectReports from "../screens/SelectReports";
@@ -88,6 +92,10 @@ export default function Navigation(props) {
         <UserDashboardStack.Screen name="LocationHistory" component={LocationHistory} />
         <UserDashboardStack.Screen name="UserProfile" component={UserProfile} />
         <UserDashboardStack.Screen name="EditProfile" component={EditProfile} />
+        <UserDashboardStack.Screen name="AddChild" component={AddChild} />
+        <UserDashboardStack.Screen name="AddChildLocation" component={AddChildLocation} />
+        <UserDashboardStack.Screen name="AddChildSafeZones" component={AddChildSafeZones} />
+        <UserDashboardStack.Screen name="ChildSafeZone" component={ChildSafeZone} />
       </UserDashboardStack.Navigator>
     );
   }
