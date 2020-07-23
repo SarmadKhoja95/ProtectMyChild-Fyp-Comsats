@@ -33,13 +33,6 @@ function EmptyList() {
   
     return (
       <>
-      <Block middle style={{padding:10,paddingBottom:0}}>
-       {props.item.status === "pending" ?
-       <Text h3 color="maroon">Help Requests</Text>
-       :
-       <Text h3 color="maroon">Helping Parents</Text>}
-          <Icon name="minus" family="AntDesign" size={70} color="maroon" style={{margin:-15}}/>
-          </Block>
       <Block style={styles.item}>
       <Block flex={1} row>
         <Block flex={0.2} center>
