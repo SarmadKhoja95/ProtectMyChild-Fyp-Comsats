@@ -106,7 +106,7 @@ const viewLocation = (item) => {
   }
 
   const changeStatus = (id) => {
-    dispatch(setHelpStatus("ongoing", id,  user.data.token));
+    dispatch(setHelpStatus(user.data.user._id, "ongoing", id,  user.data.token));
     }
 
  const viewDetail = (item) => {

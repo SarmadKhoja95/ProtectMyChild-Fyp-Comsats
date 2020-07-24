@@ -70,7 +70,7 @@ export const getHelpReports = ( id ,token) => async dispatch => {
   }
 }
 
-export const setHelpStatus = ( status , id , token) => async dispatch => {
+export const setHelpStatus = ( user, status , id , token) => async dispatch => {
 
   dispatch({ type: UPDATE_HELP_REPORT_REQUEST });
    // Request Headers
@@ -84,7 +84,7 @@ export const setHelpStatus = ( status , id , token) => async dispatch => {
     }
   };
   try {
-    const body = JSON.stringify({ status });
+    const body = JSON.stringify({ user , status });
     const url = config.apiUrl + 'help/setHelpStatus';
     let res = await axios.put(url, body, options);
     setProfilePicture(res.data.data.ongoing);
@@ -101,7 +101,7 @@ export const setHelpStatus = ( status , id , token) => async dispatch => {
   }
 }
 
-export const updateChildFoundData = ( childPicture , note , id , token) => async dispatch => {
+export const updateChildFoundData = ( user, childPicture , note , id , token) => async dispatch => {
 
   dispatch({ type: UPDATE_FOUND_CHILD_REQUEST });
    // Request Headers
@@ -121,7 +121,7 @@ export const updateChildFoundData = ( childPicture , note , id , token) => async
     console.log("Image name:", imgName);
     var ref = Firebase.storage().ref().child("foundChild/" + imgName);
     await ref.put(blob);
-    const body = JSON.stringify({ childPicture : imgName , note });
+    const body = JSON.stringify({ user, childPicture : imgName , note });
     const url = config.apiUrl + 'help/updateHelpData';
     let res = await axios.put(url, body, options);
     

@@ -116,7 +116,7 @@ export default function HelpOthers(props) {
 
   const submitChildData = () => {
     if( selectedImage != null){
-      dispatch(updateChildFoundData( selectedImage.localUri , Note, selectedChild._id, user.data.token));
+      dispatch(updateChildFoundData( user.data.user._id, selectedImage.localUri , Note, selectedChild._id, user.data.token));
       ToastAndroid.show('Child Found Data Has Been Sent to the Parent', ToastAndroid.LONG);
       setModalVisible(false);
     }
