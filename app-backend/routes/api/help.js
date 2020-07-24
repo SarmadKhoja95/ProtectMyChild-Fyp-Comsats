@@ -77,12 +77,12 @@ router.put('/setHelpStatus', auth, async (req, res) => {
 
 router.put('/updateHelpData', auth, async (req, res) => {
 
-  const { childPicture , note } = req.body;
+  const { childPicture , note , user } = req.body;
   const { id } = req.query;
  
   try {
          let help = await Help.findOne({ reportId : id });
-         let data = await Help.findOneAndUpdate({reportId : id} , { childPicture : childPicture , note : note , status : "found" }, { new: true });
+         let data = await Help.findOneAndUpdate({reportId : id , fromUserId : user } , { childPicture : childPicture , note : note , status : "found" }, { new: true });
          // send notification to child's parent
          let title = help.reportData.name + " Update";
          let msg = "Helping Parent has uploaded a picture. You must check it out !";
